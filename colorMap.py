@@ -136,12 +136,10 @@ uniqValues.sort()
 # then we'll get as many color values as there are ints between min and max
 # otherwise, we'll only get as many color values as there 
 #    are UNIQUE values in the CSV
-if "-increment" in sys.argv:
+if "-increment" in sys.argv or "-truncate" in sys.argv:
 	colorsNeeded = (max(allValues) - min(allValues)) + 1
 else:
 	colorsNeeded = len(uniqValues)
-
-print colorsNeeded
 
 # get the color palette
 ourColors = getColors(colorsNeeded)
@@ -152,7 +150,6 @@ if "-increment" in sys.argv:
 	colorDict = matchValuesToColors(valueRange, ourColors)
 else:
 	colorDict = matchValuesToColors(uniqValues, ourColors)
-
 
 # get the {State: Speed} dictionary
 stateValueDict = stateValuesDict(inputCSV)
