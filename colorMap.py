@@ -8,7 +8,9 @@ def getColors(numberNeeded):
 	"""
 	takes the number needed and returns a list of hex color values
 	"""
-	if(numberNeeded % 2 != 0):
+	if(numberNeeded % 2 == 0):
+		numberNeeded += 2
+	else:
 		numberNeeded += 1
 
 	myYellow = Color("#F4EB37")
@@ -29,7 +31,6 @@ def matchValuesToColors(limits, colors):
 	takes a list of limits and a list of colors
 	returns a dictionary of color matches {Value: Color}
 	"""
-
 	colorMatches = {}
 	i = 0
 	while i < len(limits):
@@ -145,6 +146,9 @@ ourColors = getColors(colorsNeeded)
 
 # get the color dictionary 
 colorDict = matchValuesToColors(uniqValues, ourColors)
+
+print ourColors
+print colorDict
 
 # get the {State: Speed} dictionary
 stateValueDict = stateValuesDict(inputCSV)
