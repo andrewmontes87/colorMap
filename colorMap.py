@@ -26,15 +26,15 @@ def getColors(numberNeeded):
 		allColors.append(color.hex)
 	return allColors
 
-def matchValuesToColors(limits, colors):
+def matchValuesToColors(values, colors):
 	"""
-	takes a list of limits and a list of colors
+	takes a list of values and a list of colors
 	returns a dictionary of color matches {Value: Color}
 	"""
 	colorMatches = {}
 	i = 0
-	while i < len(limits):
-		colorMatches[limits[i]] = colors[i]
+	while i < len(values):
+		colorMatches[values[i]] = colors[i]
 		i += 1
 	return colorMatches
 
@@ -137,18 +137,22 @@ uniqValues.sort()
 # otherwise, we'll only get as many color values as there 
 #    are UNIQUE values in the CSV
 if "-increment" in sys.argv:
-	colorsNeeded = max(allValues) - min(allValues)
+	colorsNeeded = (max(allValues) - min(allValues)) + 1
 else:
 	colorsNeeded = len(uniqValues)
+
+print colorsNeeded
 
 # get the color palette
 ourColors = getColors(colorsNeeded)
 
-# get the color dictionary 
-colorDict = matchValuesToColors(uniqValues, ourColors)
+# get the color dictionary
+if "-increment" in sys.argv:
+	valueRange = range(min(allValues), max(allValues) + 1)
+	colorDict = matchValuesToColors(valueRange, ourColors)
+else:
+	colorDict = matchValuesToColors(uniqValues, ourColors)
 
-print ourColors
-print colorDict
 
 # get the {State: Speed} dictionary
 stateValueDict = stateValuesDict(inputCSV)
