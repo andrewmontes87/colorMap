@@ -1,10 +1,12 @@
 from colour import Color
 import csv
 import xml.etree.ElementTree as ET
+import sys
+import re
 
 def getColors(numberNeeded):
 	"""
-	takes an int and returns a list of hex color values
+	takes the number needed and returns a list of hex color values
 	"""
 	if(numberNeeded % 2 != 0):
 		numberNeeded += 1
@@ -35,13 +37,13 @@ def matchValuesToColors(limits, colors):
 		i += 1
 	return colorMatches
 
-def stateValuesDict():
+def stateValuesDict(inputCSV):
 	# create a dictionary of {State: Value}
 	stateValueDict = {}
 
-	ourCSV = raw_input("Enter the file to open: ")
+	# ourCSV = raw_input("Enter the file to open: ")
 
-	myFile = open(ourCSV, 'rb')
+	myFile = open(inputCSV, 'rb')
 	rows = csv.reader(myFile, delimiter=',')
 	for row in rows:
 		stateValueDict[row[0]] = int(row[1])
@@ -50,12 +52,12 @@ def stateValuesDict():
 
 	return stateValueDict
 
-def getAllValues():
+def getAllValues(inputCSV):
 	# this will hold the set of all of our limits
 	allValues = []
 
 	# open the CSV and read out all of the speed limits
-	myFile = open('SpeedByState.csv', 'rb')
+	myFile = open(inputCSV, 'rb')
 	rows = csv.reader(myFile, delimiter=',')
 	for row in rows:
 		allValues.append(int(row[1]))
@@ -64,9 +66,9 @@ def getAllValues():
 
 	return allValues
 
-def getAllStates():
+def getAllStates(inputCSV):
 	allStates = []
-	myFile = open('SpeedByState.csv', 'rb')
+	myFile = open(inputCSV, 'rb')
 	rows = csv.reader(myFile, delimiter=',')
 	for row in rows:
 		allStates.append(row[0])
@@ -102,26 +104,50 @@ def colorStates(colorDict, stateValueDict):
 	f.write(output)
 	f.close()
 
+def getFile(argv):
+	"""
+	if a CSV has been specified, use that
+	otherwise, prompt the user to enter a filename
+	"""
+	inputCSV = False
+	for arg in argv:
+		if re.search('\.csv$', arg):
+			inputCSV = arg
+	if not inputCSV:
+		inputCSV = raw_input("enter a CSV to open: ")
+	return inputCSV
+
+# get the CSV to open
+inputCSV = getFile(sys.argv)
+
 # get a list of all states
-allStates = getAllStates()
+allStates = getAllStates(inputCSV)
 
 # get a list of all values associated with the states
-allValues = getAllValues()
+allValues = getAllValues(inputCSV)
+
+# get the unique values in our CSV
+uniqValues = list(set(allValues))
+uniqValues.sort()
 
 # figure out how many colors we need
-colorsNeeded = max(allValues) - min(allValues)
+# if they choose to "increment" 
+# then we'll get as many color values as there are ints between min and max
+# otherwise, we'll only get as many color values as there 
+#    are UNIQUE values in the CSV
+if "-increment" in sys.argv:
+	colorsNeeded = max(allValues) - min(allValues)
+else:
+	colorsNeeded = len(uniqValues)
 
 # get the color palette
 ourColors = getColors(colorsNeeded)
 
-uniqLimits = list(set(allValues))
-uniqLimits.sort()
-
 # get the color dictionary 
-colorDict = matchValuesToColors(uniqLimits, ourColors)
+colorDict = matchValuesToColors(uniqValues, ourColors)
 
 # get the {State: Speed} dictionary
-stateValueDict = stateValuesDict()
+stateValueDict = stateValuesDict(inputCSV)
 
 colorStates(colorDict, stateValueDict)
 
