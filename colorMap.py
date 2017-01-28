@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import sys
 import re
 
-def getColors(numberNeeded):
+def getColors(numberNeeded, userColors):
 	"""
 	takes the number needed and returns a list of hex color values
 	"""
@@ -13,11 +13,31 @@ def getColors(numberNeeded):
 	else:
 		numberNeeded += 1
 
-	myYellow = Color("#F4EB37")
-	myOrange = Color("#FFA500")
-	myRed    = Color("#8B0000")
-	colors1 = list(myYellow.range_to(myOrange, (numberNeeded / 2)))
-	colors2 = list(myOrange.range_to(myRed, (numberNeeded / 2)))
+	if userColors:
+		firstColor = Color(userColors[0])
+		lastColor = Color(userColors[-1])
+		if len(userColors) == 3:
+			middleColor = Color(userColors[1])
+		else:
+			middleColor = False
+
+	else:
+		firstColor  = Color("#F4EB37")
+		middleColor = Color("#FFA500")
+		lastColor   = Color("#8B0000")
+
+	if middleColor:
+		colors1 = list( firstColor.range_to(middleColor, (numberNeeded / 2)))
+		colors2 = list(middleColor.range_to(lastColor,   (numberNeeded / 2)))
+	else:
+		colors1 = list(firstColor.range_to(lastColor, numberNeeded))
+		colors2 = []
+
+	# myYellow = Color("#F4EB37")
+	# myOrange = Color("#FFA500")
+	# myRed    = Color("#8B0000")
+	# colors1 = list(myYellow.range_to(myOrange, (numberNeeded / 2)))
+	# colors2 = list(myOrange.range_to(myRed, (numberNeeded / 2)))
 
 	allColors = []
 	for color in colors1:
@@ -129,6 +149,16 @@ def getOutputFile(argv):
 			outputCSV = arg
 	return outputCSV
 
+def getInputColors(argv):
+	colors = []
+	for arg in sys.argv:
+		if re.search("^\#[0-9a-f].....$", arg):
+			colors.append(arg)
+	if len(colors) > 1:
+		return colors[0:3]
+	else:
+		return False
+
 # get the CSV to open
 inputCSV = getInputFile(sys.argv)
 
@@ -152,8 +182,11 @@ if "-increment" in sys.argv or "-truncate" in sys.argv:
 else:
 	colorsNeeded = len(uniqValues)
 
+# see if the user has a color palette in mind
+userColors = getInputColors(sys.argv)
+
 # get the color palette
-ourColors = getColors(colorsNeeded)
+ourColors = getColors(colorsNeeded, userColors)
 
 # get the color dictionary
 if "-increment" in sys.argv:
