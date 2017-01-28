@@ -76,7 +76,7 @@ def getAllStates(inputCSV):
 	myFile.close()
 	return allStates
 
-def colorStates(colorDict, stateValueDict):
+def colorStates(colorDict, stateValueDict, outFile):
 	"""
 	takes the {Value: Color} and {State: Value} dicts
 	and colors in the map
@@ -101,11 +101,11 @@ def colorStates(colorDict, stateValueDict):
 
 	# write the new XML to the output file
 	output = ET.tostring(root)
-	f = open('newMap.svg', 'w')
+	f = open(outFile, 'w')
 	f.write(output)
 	f.close()
 
-def getFile(argv):
+def getInputFile(argv):
 	"""
 	if a CSV has been specified, use that
 	otherwise, prompt the user to enter a filename
@@ -118,8 +118,19 @@ def getFile(argv):
 		inputCSV = raw_input("enter a CSV to open: ")
 	return inputCSV
 
+def getOutputFile(argv):
+	"""
+	if an SVG has been specified, we'll write to that
+	otherwise, we'll use a default
+	"""
+	outputCSV = "newMap.svg"
+	for arg in argv:
+		if re.search('\.svg$', arg):
+			outputCSV = arg
+	return outputCSV
+
 # get the CSV to open
-inputCSV = getFile(sys.argv)
+inputCSV = getInputFile(sys.argv)
 
 # get a list of all states
 allStates = getAllStates(inputCSV)
@@ -154,5 +165,7 @@ else:
 # get the {State: Speed} dictionary
 stateValueDict = stateValuesDict(inputCSV)
 
-colorStates(colorDict, stateValueDict)
+outputCSV = getOutputFile(sys.argv)
+
+colorStates(colorDict, stateValueDict, outputCSV)
 
