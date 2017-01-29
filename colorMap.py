@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from colour import Color
 import csv
 import xml.etree.ElementTree as ET
@@ -158,8 +160,12 @@ def getOutputFile(argv):
 
 def getInputColors(argv):
 	colors = []
+	namedColors = ['springgreen', 'salmon', 'midnightblue', 'mediumseagreen', 'thistle', 'lightslategray', 'khaki', 'lightgray', 'coral', 'darkgray', 'silver', 'steelblue', 'lavenderblush', 'lightpink', 'white', 'darkolivegreen', 'lightcyan', 'lightblue', 'turquoise', 'lightgreen', 'lightgoldenrod', 'darkmagenta', 'blue', 'darkslategray', 'wheat', 'palegreen', 'ivory', 'cornsilk', 'darkslateblue', 'blueviolet', 'purple', 'powderblue', 'pink', 'darkorange', 'orange', 'papayawhip', 'peru', 'seashell', 'aliceblue', 'lemonchiffon', 'goldenrod', 'skyblue', 'maroon', 'navy', 'violet', 'burlywood', 'crimson', 'beige', 'lightsteelblue', 'tomato', 'chartreuse', 'royalblue', 'gray', 'darkgoldenrod', 'darkorchid', 'deeppink', 'honeydew', 'orangered', 'forestgreen', 'darkturquoise', 'firebrick', 'greenyellow', 'indianred', 'olivedrab', 'darkblue', 'peachpuff', 'lime', 'mintcream', 'cyan', 'limegreen', 'hotpink', 'mediumslateblue', 'moccasin', 'darkkhaki', 'deepskyblue', 'magenta', 'yellowgreen', 'lawngreen', 'slateblue', 'mediumspringgreen', 'snow', 'red', 'orchid', 'indigo', 'mistyrose', 'chocolate', 'navajowhite', 'cornflowerblue', 'lightgoldenrodyellow', 'gainsboro', 'mediumblue', 'mediumorchid', 'linen', 'aquamarine', 'palevioletred', 'mediumvioletred', 'lightyellow', 'violetred', 'darksalmon', 'olive', 'lavender', 'slategray', 'ghostwhite', 'seagreen', 'brown', 'antiquewhite', 'darkcyan', 'darkseagreen', 'lightsalmon', 'mediumaquamarine', 'lightseagreen', 'gold', 'darkred', 'bisque', 'darkgreen', 'azure', 'dimgray', 'black', 'dodgerblue', 'oldlace', 'lightskyblue', 'mediumpurple', 'sandybrown', 'tan', 'yellow', 'floralwhite', 'lightslateblue', 'cadetblue', 'plum', 'blanchedalmond', 'sienna', 'palegoldenrod', 'darkviolet', 'green', 'whitesmoke', 'mediumturquoise', 'saddlebrown', 'lightcoral', 'rosybrown', 'paleturquoise']
+
 	for arg in sys.argv:
 		if re.search("^\#[0-9a-f].....$", arg):
+			colors.append(arg)
+		if arg.lower() in namedColors:
 			colors.append(arg)
 	if len(colors) > 1:
 		return colors[0:3]
