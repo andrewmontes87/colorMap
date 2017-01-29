@@ -12,7 +12,7 @@ Specify your output file - the filename must have a .svg extension. If non is sp
 e.g. `colorMap input.csv output.svg`
 
 ##Colors
-Set your own colors - provide 2 or 3 hex color values in your arguments. If fewer than 2 are provided, we will use the default colors. If more than three are provided, only the first three colors will be used. Default colors: yellow (#F4EB37), orange (#FFA500), red (#8B0000)
+Set your own colors - provide 2 or 3 6-digit hex color values (in quotes and preceded by a `#` e.g. `"#fcd123`) or named colors (e.g. `red`) in your arguments. If fewer than 2 are provided, we will use the default colors. If more than three are provided, only the first three colors will be used. Default colors: yellow (#F4EB37), orange (#FFA500), red (#8B0000)
 
 e.g. `colorMap "#4286f4" "#42f448 "ee42f4"`
 
