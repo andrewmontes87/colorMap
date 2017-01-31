@@ -28,7 +28,7 @@ Retrieves a 4-color (`a, b, c, d`) gradient and assigns them to the 4 values
 Color match: `1: a, 3: b, 4: c, 7: d`
 
 ###Increment
-`-increment`
+`colorMap.py -increment`
 Gets one color for every value between the minimum and maximum in our set.
 The color difference between each value is proporitional to the value difference. e.g. 1 and 5 will have a greater color difference than 6 and 7.
 
@@ -39,7 +39,7 @@ Retrieves a 7 color gradient (`a-g`) and assigns them proportionally among the 4
 Color match: `1: a, 3: c, 4: d, 7: g`
 
 ###Truncate
-`-truncate`
+`colorMap.py -truncate`
 Gets one color for every value between the minimum and maximum in the value set, but assigns the values incrementally to each _unique_ value. Every value has an equal separation (same as with default), but the color range will be shorter.
 
 Unique values: `1, 3, 4, 7`
