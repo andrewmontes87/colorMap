@@ -123,32 +123,41 @@ def colorStates(colorDict, stateValueDict, outFile, needUSMap, needCanMap):
 
 	# determine which map to write to: US, Canada, or US+Canada
 	if   (needUSMap == True)  and (needCanMap == False):
-		print "US Map"
 		tree = ET.parse('USMap.svg')
 	elif (needUSMap == True)  and (needCanMap == True):
-		print "Canada map"
 		tree = ET.parse('USCanadaMap.svg')
 	elif (needUSMap == False) and (needCanMap == True):
-		print "US + Canada map"
 		tree = ET.parse('CanadaMap.svg')
 	else:
-		print "you're not American or Canadian"
+		print "You territories aren't valid"
 
 	root = tree.getroot()
 
 	# iterate through the states
-	for child in root:
-		if child.tag == "{http://www.w3.org/2000/svg}g":
-			for state in child:
-				try:
-					# find the state's value
-					stateValue = stateValueDict[state.attrib["id"]]
-					# find the corresponding color
-					stateColor = colorDict[stateValue]
-					# write that color to the shape's space on the map
-					state.attrib["fill"] = stateColor
-				except KeyError:
-					continue
+	# this code assumes we're using the US map - may need to adapt this for the Canada and US+Canada maps
+	if (needUSMap == True)  and (needCanMap == False):
+		for child in root:
+			if child.tag == "{http://www.w3.org/2000/svg}g":
+				for state in child:
+					try:
+						# find the state's value
+						stateValue = stateValueDict[state.attrib["id"]]
+						# find the corresponding color
+						stateColor = colorDict[stateValue]
+						# write that color to the shape's space on the map
+						state.attrib["fill"] = stateColor
+					except KeyError:
+						continue
+	elif (needUSMap == False) and (needCanMap == True):
+		for child in root:
+			if child.attrib['id'] == 'Canada':
+				for province in child:
+					try:
+						provValue = stateValueDict[province.attrib['id']]
+						provColor = colorDict[provValue]
+						province.attrib["fill"] = provColor
+					except KeyError:
+						continue
 
 	# write the new XML to the output file
 	output = ET.tostring(root)
