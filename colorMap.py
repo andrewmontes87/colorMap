@@ -69,10 +69,13 @@ def stateValuesDict(inputCSV, needAbbreviate):
 	stateValueDict = {}
 
 	# dictionary of all US states {Name: Abbreviation}
-	statesByName = {"Alabama": "AL", "Alaska": "AK", "Arizona": "AZ", "Arkansas": "AR", "California": "CA", "Colorado": "CO", "Connecticut": "CT", "Delaware": "DE", "District of Columbia": "DC", "Florida": "FL", "Georgia": "GA", "Hawaii": "HI", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Iowa": "IA", "Kansas": "KS", "Kentucky": "KY", "Louisiana": "LA", "Maine": "ME", "Maryland": "MD", "Massachusetts": "MA", "Michigan": "MI", "Minnesota": "MN", "Mississippi": "MS", "Missouri": "MO", "Montana": "MT", "Nebraska": "NE", "Nevada": "NV", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "New York": "NY", "North Carolina": "NC", "North Dakota": "ND", "Ohio": "OH", "Oklahoma": "OK", "Oregon": "OR", "Pennsylvania": "PA", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", "Tennessee": "TN", "Texas": "TX", "Utah": "UT", "Vermont": "VT", "Virginia": "VA", "Washington": "WA", "West Virginia": "WV", "Wisconsin": "WI", "Wyoming": "WY"}
+	# statesByName = {"Alabama": "AL", "Alaska": "AK", "Arizona": "AZ", "Arkansas": "AR", "California": "CA", "Colorado": "CO", "Connecticut": "CT", "Delaware": "DE", "District of Columbia": "DC", "Florida": "FL", "Georgia": "GA", "Hawaii": "HI", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Iowa": "IA", "Kansas": "KS", "Kentucky": "KY", "Louisiana": "LA", "Maine": "ME", "Maryland": "MD", "Massachusetts": "MA", "Michigan": "MI", "Minnesota": "MN", "Mississippi": "MS", "Missouri": "MO", "Montana": "MT", "Nebraska": "NE", "Nevada": "NV", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "New York": "NY", "North Carolina": "NC", "North Dakota": "ND", "Ohio": "OH", "Oklahoma": "OK", "Oregon": "OR", "Pennsylvania": "PA", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", "Tennessee": "TN", "Texas": "TX", "Utah": "UT", "Vermont": "VT", "Virginia": "VA", "Washington": "WA", "West Virginia": "WV", "Wisconsin": "WI", "Wyoming": "WY"}
+
+	# trying this with all {Name: Abbreviation} pairs for US and Canada in one dict
+	statesByName = {"Alabama": "AL", "Alaska": "AK", "Arizona": "AZ", "Arkansas": "AR", "California": "CA", "Colorado": "CO", "Connecticut": "CT", "Delaware": "DE", "District of Columbia": "DC", "Florida": "FL", "Georgia": "GA", "Hawaii": "HI", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Iowa": "IA", "Kansas": "KS", "Kentucky": "KY", "Louisiana": "LA", "Maine": "ME", "Maryland": "MD", "Massachusetts": "MA", "Michigan": "MI", "Minnesota": "MN", "Mississippi": "MS", "Missouri": "MO", "Montana": "MT", "Nebraska": "NE", "Nevada": "NV", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "New York": "NY", "North Carolina": "NC", "North Dakota": "ND", "Ohio": "OH", "Oklahoma": "OK", "Oregon": "OR", "Pennsylvania": "PA", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", "Tennessee": "TN", "Texas": "TX", "Utah": "UT", "Vermont": "VT", "Virginia": "VA", "Washington": "WA", "West Virginia": "WV", "Wisconsin": "WI", "Wyoming": "WY", "Ontario": "ON", "Quebec":"QC", "Nova Scotia": "NS", "New Brunswick":"NB", "Manitoba":"MB", "British Columbia":"BC", "Prince Edward Island":"PE", "Saskatchewan":"SK", "Alberta":"AB", "Newfoundland and Labrador":"NL", "Northwest Territories":"NT", "Yukon":"YT", "Nunavut":"NU"}
 
 	# dictionary of all Canadian provinces/territories {Name: Abbreviation}
-	provincesByName = {"Ontario": "ON", "Quebec":"QC", "Nova Scotia": "NS", "New Brunswick":"NB", "Manitoba":"MB", "British Columbia":"BC", "Prince Edward Island":"PE", "Saskatchewan":"SK", "Alberta":"AB", "Newfoundland and Labrador":"NL", "Northwest Territories":"NT", "Yukon":"YT", "Nunavut":"NU"}
+	# provincesByName = {"Ontario": "ON", "Quebec":"QC", "Nova Scotia": "NS", "New Brunswick":"NB", "Manitoba":"MB", "British Columbia":"BC", "Prince Edward Island":"PE", "Saskatchewan":"SK", "Alberta":"AB", "Newfoundland and Labrador":"NL", "Northwest Territories":"NT", "Yukon":"YT", "Nunavut":"NU"}
 
 	myFile = open(inputCSV, 'rb')
 	rows = csv.reader(myFile, delimiter=',')
@@ -87,10 +90,10 @@ def stateValuesDict(inputCSV, needAbbreviate):
 	return stateValueDict
 
 def getAllValues(inputCSV):
-	# this will hold the set of all of our limits
+	# this will hold the set of all of the CSV "values" column
 	allValues = []
 
-	# open the CSV and read out all of the speed limits
+	# open the CSV and read out all of the values
 	myFile = open(inputCSV, 'rb')
 	rows = csv.reader(myFile, delimiter=',')
 	for row in rows:
@@ -109,13 +112,28 @@ def getAllStates(inputCSV):
 	myFile.close()
 	return allStates
 
-def colorStates(colorDict, stateValueDict, outFile):
+def colorStates(colorDict, stateValueDict, outFile, needUSMap, needCanMap):
 	"""
 	takes the {Value: Color} and {State: Value} dicts
 	and colors in the map
 	"""
 	# open and parse the map XML
-	tree = ET.parse('USMap.svg')
+	# tree = ET.parse('USMap.svg')
+	# root = tree.getroot()
+
+	# determine which map to write to: US, Canada, or US+Canada
+	if   (needUSMap == True)  and (needCanMap == False):
+		print "US Map"
+		tree = ET.parse('USMap.svg')
+	elif (needUSMap == True)  and (needCanMap == True):
+		print "Canada map"
+		tree = ET.parse('USCanadaMap.svg')
+	elif (needUSMap == False) and (needCanMap == True):
+		print "US + Canada map"
+		tree = ET.parse('CanadaMap.svg')
+	else:
+		print "you're not American or Canadian"
+
 	root = tree.getroot()
 
 	# iterate through the states
@@ -176,26 +194,25 @@ def getInputColors(argv):
 	else:
 		return False
 
-def isAmerica(potentialStates, abbreviated):
-	if abbreviated == True:
+def isAmerica(potentialStates, needAbbreviate):
+	if needAbbreviate == False:
 		USstates = ['WA', 'WI', 'WV', 'FL', 'WY', 'NH', 'NJ', 'NM', 'NC', 'ND', 'NE', 'NY', 'RI', 'NV', 'CO', 'CA', 'GA', 'CT', 'OK', 'OH', 'KS', 'SC', 'KY', 'OR', 'SD', 'DE', 'DC', 'HI', 'TX', 'LA', 'TN', 'PA', 'VA', 'AK', 'AL', 'AR', 'VT', 'IL', 'IN', 'IA', 'AZ', 'ID', 'ME', 'MD', 'MA', 'UT', 'MO', 'MN', 'MI', 'MT', 'MS']
-	elif abbreviated == False:
+	elif needAbbreviate == True:
 		USstates = ['Washington', 'Wisconsin', 'West Virginia', 'Florida', 'Wyoming', 'New Hampshire', 'New Jersey', 'New Mexico', 'North Carolina', 'North Dakota', 'Nebraska', 'New York', 'Rhode Island', 'Nevada', 'Colorado', 'California', 'Georgia', 'Connecticut', 'Oklahoma', 'Ohio', 'Kansas', 'South Carolina', 'Kentucky', 'Oregon', 'South Dakota', 'Delaware', 'District of Columbia', 'Hawaii', 'Texas', 'Louisiana', 'Tennessee', 'Pennsylvania', 'Virginia', 'Alaska', 'Alabama', 'Arkansas', 'Vermont', 'Illinois', 'Indiana', 'Iowa', 'Arizona', 'Idaho', 'Maine', 'Maryland', 'Massachusetts', 'Utah', 'Missouri', 'Minnesota', 'Michigan', 'Montana', 'Mississippi']
 	for place in potentialStates:
 		if place in USstates:
 			return True
 	return False
 
-def isCanada(potentialProvinces, abbreviated):
-	if abbreviated == True:
+def isCanada(potentialProvinces, needAbbreviate):
+	if needAbbreviate == False:
 		canadianProvinces = ["ON", "QC", "NS", "NB", "MB", "BC", "PE", "SK", "AB", "NL", "NT", "YT", "NU"]
-	elif abbreviated == False:
+	elif needAbbreviate == True:
 		canadianProvinces = ["Ontario", "Quebec", "Nova Scotia", "New Brunswick", "Manitoba", "British Columbia", "Prince Edward Island", "Saskatchewan", "Alberta", "Newfoundland and Labrador", "Northwest Territories", "Yukon", "Nunavut"]
 	for place in potentialProvinces:
 		if place in canadianProvinces:
 			return True
 	return False
-
 
 # get the CSV to open
 inputCSV = getInputFile(sys.argv)
@@ -247,5 +264,5 @@ stateValueDict = stateValuesDict(inputCSV, needAbbreviate)
 
 outputCSV = getOutputFile(sys.argv)
 
-colorStates(colorDict, stateValueDict, outputCSV)
+colorStates(colorDict, stateValueDict, outputCSV, needUSMap, needCanMap)
 
