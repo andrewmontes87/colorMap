@@ -117,38 +117,33 @@ def colorStates(colorDict, stateValueDict, outFile, needUSMap, needCanMap):
 	takes the {Value: Color} and {State: Value} dicts
 	and colors in the map
 	"""
-	# open and parse the map XML
-	# tree = ET.parse('USMap.svg')
-	# root = tree.getroot()
+	# check to see if it's US, Canada, or both
+	# loop through the states in the map and assign corresponding values from the dictionaries
 
-	# determine which map to write to: US, Canada, or US+Canada
-	if   (needUSMap == True)  and (needCanMap == False):
+	# US map
+	if (needUSMap == True)  and (needCanMap == False):
 		tree = ET.parse('USMap.svg')
-	elif (needUSMap == True)  and (needCanMap == True):
-		tree = ET.parse('USCanadaMap.svg')
+		root = tree.getroot()
+		for child in root:
+			try:
+				if child.attrib['id'] == "outlines":
+					for state in child:
+						try:
+							# find the state's value
+							stateValue = stateValueDict[state.attrib["id"]]
+							# find the corresponding color
+							stateColor = colorDict[stateValue]
+							# write that color to the shape's space on the map
+							state.attrib["fill"] = stateColor
+						except KeyError:
+							continue
+			except KeyError:
+				continue
+
+	# Canadian map
 	elif (needUSMap == False) and (needCanMap == True):
 		tree = ET.parse('CanadaMap.svg')
-	else:
-		print "You territories aren't valid"
-
-	root = tree.getroot()
-
-	# iterate through the states
-	# this code assumes we're using the US map - may need to adapt this for the Canada and US+Canada maps
-	if (needUSMap == True)  and (needCanMap == False):
-		for child in root:
-			if child.tag == "{http://www.w3.org/2000/svg}g":
-				for state in child:
-					try:
-						# find the state's value
-						stateValue = stateValueDict[state.attrib["id"]]
-						# find the corresponding color
-						stateColor = colorDict[stateValue]
-						# write that color to the shape's space on the map
-						state.attrib["fill"] = stateColor
-					except KeyError:
-						continue
-	elif (needUSMap == False) and (needCanMap == True):
+		root = tree.getroot()
 		for child in root:
 			if child.attrib['id'] == 'Canada':
 				for province in child:
@@ -159,7 +154,10 @@ def colorStates(colorDict, stateValueDict, outFile, needUSMap, needCanMap):
 					except KeyError:
 						continue
 
+	# US + Canada map
 	elif (needUSMap == True) and (needCanMap == True):
+		tree = ET.parse('USCanadaMap.svg')
+		root = tree.getroot()
 		for child in root:
 			if child.attrib['id'] == "US-CAN":
 				for country in child:
