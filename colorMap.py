@@ -159,6 +159,18 @@ def colorStates(colorDict, stateValueDict, outFile, needUSMap, needCanMap):
 					except KeyError:
 						continue
 
+	elif (needUSMap == True) and (needCanMap == True):
+		for child in root:
+			if child.attrib['id'] == "US-CAN":
+				for country in child:
+					for state in country:
+						try:
+							stateValue = stateValueDict[state.attrib['id']]
+							stateColor = colorDict[stateValue]
+							state.attrib["fill"] = stateColor
+						except KeyError:
+							continue
+
 	# write the new XML to the output file
 	output = ET.tostring(root)
 	f = open(outFile, 'w')
