@@ -81,9 +81,9 @@ def stateValuesDict(inputCSV, needAbbreviate):
 	rows = csv.reader(myFile, delimiter=',')
 	for row in rows:
 		if needAbbreviate == False:
-			stateValueDict[row[0]] = int(row[1])
+			stateValueDict[row[0]] = float(row[1])
 		elif needAbbreviate == True:
-			stateValueDict[statesByName[row[0]]] = int(row[1])
+			stateValueDict[statesByName[row[0]]] = float(row[1])
 
 	myFile.close()
 
@@ -97,7 +97,7 @@ def getAllValues(inputCSV):
 	myFile = open(inputCSV, 'rb')
 	rows = csv.reader(myFile, delimiter=',')
 	for row in rows:
-		allValues.append(int(row[1]))
+		allValues.append(float(row[1]))
 
 	myFile.close()
 
