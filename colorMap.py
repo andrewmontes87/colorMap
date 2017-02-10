@@ -67,13 +67,18 @@ def getStateValuesDict(inputCSV):
 
 	with open(inputCSV) as myCSV:
 		for line in myCSV:
+			# clear whitespace
 			line = re.sub(' ', '', line)
+			# clear special characters
 			line = re.sub('[^0-9a-zA-Z.,]', '', line)
+			# split on the comma
 			line = line.split(',')
-			if len(line[0]) > 2:
-				stateValueDict[statesByName[line[0]]] = float(line[1])
-			else:
-				stateValueDict[line[0]] = float(line[1])
+			# only proceed if it's a state or province name or abbreviation
+			if line[0] in statesByName.keys() or line[0] in statesByName.values():
+				if len(line[0]) > 2:
+					stateValueDict[statesByName[line[0]]] = float(line[1])
+				else:
+					stateValueDict[line[0]] = float(line[1])
 				
 	myCSV.close()
 
@@ -198,8 +203,6 @@ def isCanada(potentialProvinces):
 inputCSV = getInputFile(sys.argv)
 
 stateValueDict = getStateValuesDict(inputCSV)
-
-print stateValueDict
 
 allStates = stateValueDict.keys()
 allValues = stateValueDict.values()
