@@ -2,6 +2,10 @@ Get a colored map of the United States and/or Canada by providing a CSV containi
 
 The first column of the CSV should contain the state names or 2-letter abbreviations. The second column should contain numeric values (e.g. population, per-capita income, etc.). 
 
+The first column may be full names, abbreviations, or a mix of both. Any values that do not match the name or abbreviation of a US state or Canadian province/territory will be ignored. 
+
+The second column may contain special characters (e.g. `$50000` or `45%`), which will be removed. It must not contain any commas, though: `$45,000` will be read as `45`.
+
 #Options
 
 ##Input and output
