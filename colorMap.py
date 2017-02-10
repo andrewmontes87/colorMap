@@ -58,47 +58,26 @@ def matchValuesToColors(values, colors):
 		i += 1
 	return colorMatches
 
-def stateValuesDict(inputCSV, needAbbreviate):
+def getStateValuesDict(inputCSV):
 	# create a dictionary of {State: Value}
 	stateValueDict = {}
 
 	# all {Name: Abbreviation} pairs for US and Canada in one dict
 	statesByName = {"Alabama": "AL", "Alaska": "AK", "Arizona": "AZ", "Arkansas": "AR", "California": "CA", "Colorado": "CO", "Connecticut": "CT", "Delaware": "DE", "District of Columbia": "DC", "Florida": "FL", "Georgia": "GA", "Hawaii": "HI", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Iowa": "IA", "Kansas": "KS", "Kentucky": "KY", "Louisiana": "LA", "Maine": "ME", "Maryland": "MD", "Massachusetts": "MA", "Michigan": "MI", "Minnesota": "MN", "Mississippi": "MS", "Missouri": "MO", "Montana": "MT", "Nebraska": "NE", "Nevada": "NV", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "New York": "NY", "North Carolina": "NC", "North Dakota": "ND", "Ohio": "OH", "Oklahoma": "OK", "Oregon": "OR", "Pennsylvania": "PA", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", "Tennessee": "TN", "Texas": "TX", "Utah": "UT", "Vermont": "VT", "Virginia": "VA", "Washington": "WA", "West Virginia": "WV", "Wisconsin": "WI", "Wyoming": "WY", "Ontario": "ON", "Quebec":"QC", "Nova Scotia": "NS", "New Brunswick":"NB", "Manitoba":"MB", "British Columbia":"BC", "Prince Edward Island":"PE", "Saskatchewan":"SK", "Alberta":"AB", "Newfoundland and Labrador":"NL", "Northwest Territories":"NT", "Yukon":"YT", "Nunavut":"NU"}
 
-	myFile = open(inputCSV, 'rb')
-	rows = csv.reader(myFile, delimiter=',')
-	for row in rows:
-		if needAbbreviate == False:
-			stateValueDict[row[0]] = float(row[1])
-		elif needAbbreviate == True:
-			stateValueDict[statesByName[row[0]]] = float(row[1])
-
-	myFile.close()
+	with open(inputCSV) as myCSV:
+		for line in myCSV:
+			line = re.sub(' ', '', line)
+			line = re.sub('[^0-9a-zA-Z.,]', '', line)
+			line = line.split(',')
+			if len(line[0]) > 2:
+				stateValueDict[statesByName[line[0]]] = float(line[1])
+			else:
+				stateValueDict[line[0]] = float(line[1])
+				
+	myCSV.close()
 
 	return stateValueDict
-
-def getAllValues(inputCSV):
-	# this will hold the set of all of the CSV "values" column
-	allValues = []
-
-	# open the CSV and read out all of the values
-	myFile = open(inputCSV, 'rb')
-	rows = csv.reader(myFile, delimiter=',')
-	for row in rows:
-		allValues.append(float(row[1]))
-
-	myFile.close()
-
-	return allValues
-
-def getAllStates(inputCSV):
-	allStates = []
-	myFile = open(inputCSV, 'rb')
-	rows = csv.reader(myFile, delimiter=',')
-	for row in rows:
-		allStates.append(row[0])
-	myFile.close()
-	return allStates
 
 def colorStates(colorDict, stateValueDict, outFile, needUSMap, needCanMap):
 	"""
@@ -201,21 +180,15 @@ def getInputColors(argv):
 	else:
 		return False
 
-def isAmerica(potentialStates, needAbbreviate):
-	if needAbbreviate == False:
-		USstates = ['WA', 'WI', 'WV', 'FL', 'WY', 'NH', 'NJ', 'NM', 'NC', 'ND', 'NE', 'NY', 'RI', 'NV', 'CO', 'CA', 'GA', 'CT', 'OK', 'OH', 'KS', 'SC', 'KY', 'OR', 'SD', 'DE', 'DC', 'HI', 'TX', 'LA', 'TN', 'PA', 'VA', 'AK', 'AL', 'AR', 'VT', 'IL', 'IN', 'IA', 'AZ', 'ID', 'ME', 'MD', 'MA', 'UT', 'MO', 'MN', 'MI', 'MT', 'MS']
-	elif needAbbreviate == True:
-		USstates = ['Washington', 'Wisconsin', 'West Virginia', 'Florida', 'Wyoming', 'New Hampshire', 'New Jersey', 'New Mexico', 'North Carolina', 'North Dakota', 'Nebraska', 'New York', 'Rhode Island', 'Nevada', 'Colorado', 'California', 'Georgia', 'Connecticut', 'Oklahoma', 'Ohio', 'Kansas', 'South Carolina', 'Kentucky', 'Oregon', 'South Dakota', 'Delaware', 'District of Columbia', 'Hawaii', 'Texas', 'Louisiana', 'Tennessee', 'Pennsylvania', 'Virginia', 'Alaska', 'Alabama', 'Arkansas', 'Vermont', 'Illinois', 'Indiana', 'Iowa', 'Arizona', 'Idaho', 'Maine', 'Maryland', 'Massachusetts', 'Utah', 'Missouri', 'Minnesota', 'Michigan', 'Montana', 'Mississippi']
+def isAmerica(potentialStates):
+	USstates = ['WA', 'WI', 'WV', 'FL', 'WY', 'NH', 'NJ', 'NM', 'NC', 'ND', 'NE', 'NY', 'RI', 'NV', 'CO', 'CA', 'GA', 'CT', 'OK', 'OH', 'KS', 'SC', 'KY', 'OR', 'SD', 'DE', 'DC', 'HI', 'TX', 'LA', 'TN', 'PA', 'VA', 'AK', 'AL', 'AR', 'VT', 'IL', 'IN', 'IA', 'AZ', 'ID', 'ME', 'MD', 'MA', 'UT', 'MO', 'MN', 'MI', 'MT', 'MS']
 	for place in potentialStates:
 		if place in USstates:
 			return True
 	return False
 
-def isCanada(potentialProvinces, needAbbreviate):
-	if needAbbreviate == False:
-		canadianProvinces = ["ON", "QC", "NS", "NB", "MB", "BC", "PE", "SK", "AB", "NL", "NT", "YT", "NU"]
-	elif needAbbreviate == True:
-		canadianProvinces = ["Ontario", "Quebec", "Nova Scotia", "New Brunswick", "Manitoba", "British Columbia", "Prince Edward Island", "Saskatchewan", "Alberta", "Newfoundland and Labrador", "Northwest Territories", "Yukon", "Nunavut"]
+def isCanada(potentialProvinces):
+	canadianProvinces = ["ON", "QC", "NS", "NB", "MB", "BC", "PE", "SK", "AB", "NL", "NT", "YT", "NU"]
 	for place in potentialProvinces:
 		if place in canadianProvinces:
 			return True
@@ -224,20 +197,16 @@ def isCanada(potentialProvinces, needAbbreviate):
 # get the CSV to open
 inputCSV = getInputFile(sys.argv)
 
-# get a list of all states
-allStates = getAllStates(inputCSV)
+stateValueDict = getStateValuesDict(inputCSV)
 
-# determine whether we're working with state names or their abbreviations
-needAbbreviate = False
-if len(allStates[0]) > 2:
-	needAbbreviate = True
+print stateValueDict
+
+allStates = stateValueDict.keys()
+allValues = stateValueDict.values()
 
 # determine whether we need a US map, a Canadian map, or both
-needUSMap  = isAmerica(allStates, needAbbreviate)
-needCanMap = isCanada(allStates, needAbbreviate)
-
-# get a list of all values associated with the states
-allValues = getAllValues(inputCSV)
+needUSMap  = isAmerica(allStates)
+needCanMap = isCanada(allStates)
 
 # get the unique values in our CSV
 uniqValues = list(set(allValues))
@@ -266,10 +235,6 @@ if "-increment" in sys.argv:
 else:
 	colorDict = matchValuesToColors(uniqValues, ourColors)
 
-# get the {State: Speed} dictionary
-stateValueDict = stateValuesDict(inputCSV, needAbbreviate)
-
 outputCSV = getOutputFile(sys.argv)
 
 colorStates(colorDict, stateValueDict, outputCSV, needUSMap, needCanMap)
-
