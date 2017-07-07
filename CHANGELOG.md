@@ -13,6 +13,9 @@ v1.1.0
 - - colour
 - freeze requirements
 - restructure directories
+- gitflow
+- shell command to start script
+- moved assets and changed paths
 
 
 v1.0.0

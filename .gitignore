@@ -13,6 +13,10 @@ config.py
 # we have no crts but in case
 *.crt
 
+# don't save output
+output/*
+# do save sample output
+!output/sampleNew.svg
 
 # Python general
 

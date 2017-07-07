@@ -94,7 +94,7 @@ def colorStates(colorDict, stateValueDict, outFile, needUSMap, needCanMap):
 
 	# US map
 	if (needUSMap == True)  and (needCanMap == False):
-		tree = ET.parse('USMap.svg')
+		tree = ET.parse('assets/USMap.svg')
 		root = tree.getroot()
 		for child in root:
 			try:
@@ -114,7 +114,7 @@ def colorStates(colorDict, stateValueDict, outFile, needUSMap, needCanMap):
 
 	# Canadian map
 	elif (needUSMap == False) and (needCanMap == True):
-		tree = ET.parse('CanadaMap.svg')
+		tree = ET.parse('assets/CanadaMap.svg')
 		root = tree.getroot()
 		for child in root:
 			if child.attrib['id'] == 'Canada':
@@ -128,7 +128,7 @@ def colorStates(colorDict, stateValueDict, outFile, needUSMap, needCanMap):
 
 	# US + Canada map
 	elif (needUSMap == True) and (needCanMap == True):
-		tree = ET.parse('USCanadaMap.svg')
+		tree = ET.parse('assets/USCanadaMap.svg')
 		root = tree.getroot()
 		for child in root:
 			if child.attrib['id'] == "US-CAN":
@@ -165,10 +165,10 @@ def getOutputFile(argv):
 	if an SVG has been specified, we'll write to that
 	otherwise, we'll use a default
 	"""
-	outputCSV = "newMap.svg"
+	outputCSV = "output/newMap.svg"
 	for arg in argv:
 		if re.search('\.svg$', arg):
-			outputCSV = arg
+			outputCSV = "output/" + arg
 	return outputCSV
 
 def getInputColors(argv):
