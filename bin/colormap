@@ -1,4 +1,4 @@
 #!/bin/bash
 
 BINPATH=`dirname $0`
-python "$BINPATH/../colorMap/colorMap.py" $@
+python "$BINPATH/../colorMap/main.py" $@

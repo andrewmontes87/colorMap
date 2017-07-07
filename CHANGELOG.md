@@ -2,8 +2,15 @@
 
 
 
+v1.2.0
+- refactored as class
+- CLI arguments and help 
+- lists moved to assets
+- debugging arguments
+
+
 v1.1.0
-- virtualenv venv
+- virtualenv
 - runtime
 - gitignore
 - install packages with pip
@@ -19,5 +26,5 @@ v1.1.0
 
 
 v1.0.0
-- release
+- initial release
 
