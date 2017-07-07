@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name='colorMap',
-    version='1.0.0',
+    version='1.1.0',
     packages=['colorMap'],
     include_package_data=True,
     install_requires=[
