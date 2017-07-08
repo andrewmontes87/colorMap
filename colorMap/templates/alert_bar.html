@@ -1,0 +1,22 @@
+{% for message in get_flashed_messages(category_filter=["message"]) %}
+<div class="alert alert-warning alert-dismissable" role="alert">
+  {{ message }}
+  <button 
+    type="button" 
+    class="close" 
+    data-dismiss="alert" 
+    aria-label="Close"><span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endfor %}
+{% for error in get_flashed_messages(category_filter=["error"]) %} 
+<div class="alert alert-danger alert-dismissable" role="alert">
+  Error: {{ error }}
+  <button 
+    type="button" 
+    class="close" 
+    data-dismiss="alert" 
+    aria-label="Close"><span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endfor %}

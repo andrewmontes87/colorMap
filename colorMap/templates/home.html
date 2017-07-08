@@ -1,23 +1,38 @@
 {% extends "layout.html" %}
 {% block body %}
+{% import "macros.html" as macros %}
+
 
 <div class="main container-wrap">
   <div class="container">
     <div class="row">
       <div class="col-sm-12">
-        <h1>Hello World
-        <p class="lead">Lorem40</p>
+        <h1>Welcome to Color Mapper
+        <p class="lead">Intro text goes here</p>
         <h4>Features:</h4>
         <ul>
           <li>None</li>
         </ul>
         <h4>Stack:</h4>
-         <ul>
+        <ul>
           <li><a href="http://flask.pocoo.org/" title="Flask" target="_blank">Flask</a></li>
           <li><a href="https://flask-wtf.readthedocs.io/en/stable/" title="Flask-WTForms" target="_blank">Flask-WTForms</a></li>
           <li><a href="http://getbootstrap.com/" title="Bootstrap" target="_blank">Bootstrap</a></li>
           <li><a href="https://www.heroku.com/" title="Heroku" target="_blank">Heroku</a></li>
-        </ul>       
+        </ul>
+        <form 
+          method="POST" 
+          action="/" 
+          class="upload-form"
+        >
+          {{ form.hidden_tag() }}
+          <div class="form-group">
+            {{ form.title.label }}
+            {{ form.title(class="form-control") }}
+            {{ macros.form_errors(form.title) }}
+          </div>
+          {{ form.submit(class="btn btn-primary") }}
+        </form>
       </div>
     </div>
   </div>
