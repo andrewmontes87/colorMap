@@ -5,6 +5,9 @@ colour==0.1.4
 decorator==4.0.11
 enum34==1.1.6
 Flask==0.12.2
+Flask-Moment==0.5.1
+Flask-Script==2.0.5
+Flask-WTF==0.14.2
 gunicorn==19.7.1
 ipython==5.4.1
 ipython-genutils==0.2.0
@@ -23,3 +26,4 @@ six==1.10.0
 traitlets==4.3.2
 wcwidth==0.1.7
 Werkzeug==0.12.2
+WTForms==2.1

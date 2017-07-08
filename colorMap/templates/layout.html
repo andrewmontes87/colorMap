@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Hello World</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="" />
+
+    <!-- Schema.org markup for Google+ -->
+    <meta itemprop="name" content=""/>
+    <meta itemprop="description" content=""/>
+    <meta itemprop="image" content="" />
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" content=""/>
+    <meta name="twitter:description" content=""/>
+    <!-- Twitter summary card with large image must be at least 280x150px -->
+    <meta name="twitter:image:src" content="" />
+
+    <!-- Open Graph data -->
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="680" />
+    <meta property="og:description" content="" />
+    <meta property="og:site_name" content="" />
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+  </head>
+  <body>
+    <div class="page">
+
+    {% include "header.html" %}
+    
+    {{ moment.include_moment() }}
+    
+    {% block body %}{% endblock %}
+
+    {% include "footer.html"  %}
+
+    </div>
+
+    <script 
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+      // custom js here
+    </script>
+  </body>
+</html>
+

@@ -1,3 +1,11 @@
+
+`(venv)$ python colorMap/routes.py runserver --host 0.0.0.0`
+
+
+
+
+
+
 Get a colored map of the United States and/or Canada by providing a CSV containing a list of states/provinces/territories with a numeric value for each jurisdiction. Writes out an SVG with the colored map.
 
 The first column of the CSV should contain the state names or 2-letter abbreviations. The second column should contain numeric values (e.g. population, per-capita income, etc.). 
